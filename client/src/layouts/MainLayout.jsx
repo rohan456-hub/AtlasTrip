@@ -1,4 +1,5 @@
-import { NavLink, Outlet } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { NavLink, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
 import Logo from "../components/Logo.jsx";
 import Footer from "../components/Footer.jsx";
@@ -14,20 +15,37 @@ const links = [
 
 export default function MainLayout() {
   const { user, logout } = useAuth();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [location.pathname]);
 
   return (
     <div className="app-shell">
       <header className="site-header">
         <div className="header-inner">
           <Logo />
-          <nav className="top-nav header-pill">
+          <button
+            type="button"
+            className={`hamburger ${menuOpen ? "active" : ""}`}
+            aria-label="Toggle navigation menu"
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen((current) => !current)}
+          >
+            <span />
+            <span />
+            <span />
+          </button>
+          <nav className={`top-nav header-pill ${menuOpen ? "mobile-open" : ""}`}>
             {links.map((link) => (
               <NavLink key={link.to} to={link.to} className="nav-link nav-pill-link">
                 {link.label}
               </NavLink>
             ))}
           </nav>
-          <div className="header-actions">
+          <div className={`header-actions ${menuOpen ? "mobile-open" : ""}`}>
             {user ? (
               <>
                 <NavLink to="/dashboard" className="button ghost">
@@ -43,7 +61,14 @@ export default function MainLayout() {
                     Agent
                   </NavLink>
                 )}
-                <button type="button" className="button secondary" onClick={logout}>
+                <button
+                  type="button"
+                  className="button secondary"
+                  onClick={() => {
+                    setMenuOpen(false);
+                    logout();
+                  }}
+                >
                   Logout
                 </button>
               </>

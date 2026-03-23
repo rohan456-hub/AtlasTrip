@@ -85,6 +85,28 @@ img {
   gap: 1rem;
 }
 
+.hamburger {
+  display: none;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--card-strong);
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  flex-direction: column;
+  cursor: pointer;
+}
+
+.hamburger span {
+  width: 18px;
+  height: 2px;
+  border-radius: 999px;
+  background: #343a72;
+}
+
 .brand {
   font-family: "Space Grotesk", sans-serif;
   color: #343a72;
@@ -1040,6 +1062,20 @@ table th {
     min-height: 360px;
   }
 
+  .city-slide-panel,
+  .country-page-overlay {
+    padding: 1.35rem;
+  }
+
+  .city-slide-content h1,
+  .country-page-overlay h1 {
+    font-size: clamp(1.9rem, 8vw, 3rem);
+  }
+
+  .page-shell {
+    padding: 1.25rem 4vw 3rem;
+  }
+
   .country-page-grid {
     grid-template-columns: 1fr;
   }
@@ -1053,8 +1089,9 @@ table th {
   }
 
   .header-inner {
-    grid-template-columns: 1fr;
-    justify-items: center;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    justify-items: stretch;
   }
 
   .footer-inner {
@@ -1071,8 +1108,79 @@ table th {
     padding-top: 0.9rem;
   }
 
-  .top-nav,
+  .hamburger {
+    display: inline-flex;
+    justify-self: end;
+  }
+
+  .top-nav.header-pill,
   .header-actions {
-    justify-content: center;
+    display: none;
+    width: 100%;
+    grid-column: 1 / -1;
+    border-radius: 20px;
+    padding: 0.9rem;
+    background: var(--card);
+    box-shadow: var(--shadow);
+  }
+
+  .top-nav.mobile-open,
+  .header-actions.mobile-open {
+    display: flex;
+  }
+
+  .top-nav.mobile-open {
+    flex-direction: column;
+    align-items: stretch;
+    justify-self: stretch;
+  }
+
+  .top-nav.mobile-open .nav-pill-link {
+    width: 100%;
+    text-align: center;
+  }
+
+  .header-actions.mobile-open {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .header-actions.mobile-open .button {
+    width: 100%;
+  }
+
+  .hero-copy,
+  .dashboard-hero,
+  .admin-header,
+  .booking-summary,
+  .auth-card,
+  .info-hero,
+  .info-section,
+  .info-card,
+  .country-directory,
+  .slider-shell {
+    padding: 1rem;
+  }
+
+  .feature-grid,
+  .listing-grid,
+  .stat-grid,
+  .info-grid,
+  .info-points,
+  .approval-grid,
+  .country-card-grid,
+  .country-note-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .country-slide-meta,
+  .section-header,
+  .listing-top {
+    align-items: flex-start;
+  }
+
+  .search-grid,
+  .form-grid {
+    grid-template-columns: 1fr;
   }
 }
