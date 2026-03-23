@@ -27,15 +27,9 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 const HOST = process.env.HOST || "0.0.0.0";
-const allowedOrigins = Array.from(
-  new Set(
-    ["http://localhost:5173", "http://127.0.0.1:5173", process.env.CLIENT_URL]
-      .filter(Boolean)
-      .flatMap((origin) => origin.split(","))
-      .map((origin) => origin.trim())
-      .filter(Boolean)
-  )
-);
+const allowedOrigins = process.env.CLIENT_URL
+  ? process.env.CLIENT_URL.split(",").map((origin) => origin.trim()).filter(Boolean)
+  : null;
 
 if (process.env.NODE_ENV === "production" && !process.env.MONGO_URI) {
   console.error("Server failed to start: MONGO_URI is not set");
@@ -45,13 +39,20 @@ if (process.env.NODE_ENV === "production" && !process.env.MONGO_URI) {
 app.use(
   cors({
     origin(origin, callback) {
-      const isAllowed = !origin || allowedOrigins.includes(origin);
-      return callback(null, isAllowed ? origin || true : false);
+      if (!allowedOrigins) {
+        return callback(null, true);
+      }
+
+      if (!origin || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      return callback(new Error("Not allowed by CORS"));
     },
     credentials: true
   })
 );
-app.options("*", cors({ origin: allowedOrigins, credentials: true }));
+
 app.use(express.json({ limit: "5mb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
