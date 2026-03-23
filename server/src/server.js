@@ -26,6 +26,7 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+const HOST = process.env.HOST || "0.0.0.0";
 const allowedOrigins = Array.from(
   new Set(
     ["http://localhost:5173", "http://127.0.0.1:5173", process.env.CLIENT_URL]
@@ -35,6 +36,11 @@ const allowedOrigins = Array.from(
       .filter(Boolean)
   )
 );
+
+if (process.env.NODE_ENV === "production" && !process.env.MONGO_URI) {
+  console.error("Server failed to start: MONGO_URI is not set");
+  process.exit(1);
+}
 
 app.use(
   cors({
@@ -99,8 +105,8 @@ const seedIfEmpty = async () => {
 connectDb()
   .then(seedIfEmpty)
   .then(() => {
-    app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
+    app.listen(PORT, HOST, () => {
+      console.log(`Server running on ${HOST}:${PORT}`);
     });
   })
   .catch((error) => {
